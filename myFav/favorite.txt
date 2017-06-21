@@ -1,2 +1,3 @@
 Google	http://www.google.com.tw/?gfe_rd=cr&ei=xe1JWeDuFa748AeyxKPICQ
 YouTube	https://www.youtube.com/?gl=TW&hl=zh-tw
+Google	http://www.google.com.tw/?gfe_rd=cr&ei=SfFJWe-VGqj48AfqxLfgDg

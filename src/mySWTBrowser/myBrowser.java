@@ -4,7 +4,6 @@ package mySWTBrowser;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -30,7 +29,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.browser.LocationListener;
 
 public class myBrowser{
-    static ArrayList<url_address> url_list = new ArrayList<url_address>();
+	//To store the url address list
+	static ArrayList<url_address> url_list = new ArrayList<url_address>();
 
   public static void main(String[] a) {
     
@@ -39,7 +39,8 @@ public class myBrowser{
     Shell shell = new Shell(display);
     
 
-    //The code start here
+    //My code start here
+    
     shell.setText("KSU Browser");//Windows Title
     shell.setSize(800, 700); //In SWT, the size of a widget inside a composite is not automatically set. we set it
 	Image small = new Image(display,"img/browser.ico");//To create the window icon
@@ -66,35 +67,35 @@ public class myBrowser{
     controls.setLayout(new GridLayout(7, false));
 
     //BACK BUTTON
-    Button button = new Button(controls, SWT.PUSH);
+    Button buttonBack = new Button(controls, SWT.PUSH);
 	//To show an icon to the back button
 	Image iconBack = new Image(shell.getDisplay(), "img/back.ico");
-    button.setImage(iconBack);
-    button.setSize(40, 40);
-    button.addSelectionListener(new SelectionAdapter() {
+    buttonBack.setImage(iconBack);
+    buttonBack.setSize(40, 40);
+    buttonBack.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent event) {
         browser.back();
       }
     });
     
     //FORWARD BUTTON
-    button = new Button(controls, SWT.PUSH);
+    Button buttonFwd = new Button(controls, SWT.PUSH);
 	//To show an icon to the forward button
 	Image iconFwd = new Image(shell.getDisplay(), "img/forward.ico");
-    button.setImage(iconFwd);
-    button.setSize(40, 40);
-    button.addSelectionListener(new SelectionAdapter() {
+    buttonFwd.setImage(iconFwd);
+    buttonFwd.setSize(40, 40);
+    buttonFwd.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent event) {
         browser.forward();
       }
     });
 
     //REFRESH BUTTON
-    button = new Button(controls, SWT.PUSH);
+    Button buttonRef = new Button(controls, SWT.PUSH);
 	Image iconRef = new Image(shell.getDisplay(), "img/refresh.ico");
-    button.setImage(iconRef);
-    button.setSize(40, 40);
-    button.addSelectionListener(new SelectionAdapter() {
+    buttonRef.setImage(iconRef);
+    buttonRef.setSize(40, 40);
+    buttonRef.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent event) {
         browser.refresh();
       }
@@ -126,12 +127,12 @@ public class myBrowser{
     	
     });
     //Go to url icon
-    button = new Button(controls, SWT.PUSH);
-    button.setText("Go!");
+    Button buttonURL = new Button(controls, SWT.PUSH);
+    buttonURL.setText("Go!");
 	Image iconGo = new Image(shell.getDisplay(), "img/go.ico");
-    button.setImage(iconGo);
-    button.setSize(40, 40);
-    button.addSelectionListener(new SelectionAdapter() {
+    buttonURL.setImage(iconGo);
+    buttonURL.setSize(40, 40);
+    buttonURL.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent event) {
         browser.setUrl(url.getText());
       }
@@ -178,11 +179,11 @@ public class myBrowser{
       });
    
     //Home Button
-    button = new Button(controls, SWT.PUSH);
+    Button buttonHome = new Button(controls, SWT.PUSH);
 	Image iconHome = new Image(shell.getDisplay(), "img/home.ico");
-    button.setImage(iconHome);
-    button.setSize(40, 40);
-    button.addSelectionListener(new SelectionAdapter() {
+    buttonHome.setImage(iconHome);
+    buttonHome.setSize(40, 40);
+    buttonHome.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent event) {
 			browser.setUrl("http://www.google.com");
       }
@@ -191,7 +192,6 @@ public class myBrowser{
 	browser.setUrl("http://www.google.com");
 	
     //My code finish here
-    shell.setDefaultButton(button);
 
     shell.open();
     while (!shell.isDisposed()) {
