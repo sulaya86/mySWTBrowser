@@ -1,6 +1,15 @@
 package mySWTBrowser;
 
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationEvent;
@@ -21,6 +30,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.browser.LocationListener;
 
 public class myBrowser{
+    static ArrayList<url_address> url_list = new ArrayList<url_address>();
 
   public static void main(String[] a) {
     
@@ -109,6 +119,7 @@ public class myBrowser{
             if (event.top) 
               System.out.println(event.location);
               url.setText(browser.getUrl());
+            //url.setText(event.location);
           }
           public void changing(LocationEvent event) {
           }
@@ -135,11 +146,34 @@ public class myBrowser{
         public void widgetSelected(SelectionEvent event) {
          // browser.setUrl(url.getText());
           MessageBox messageBoxFav = new MessageBox(shell, SWT.ICON_QUESTION | SWT.OK | SWT.CANCEL);
-          messageBoxFav.setMessage("Add to favorite --->" + url.getText());
-          messageBoxFav.setText("Add to Favorite");
-          messageBoxFav.open();
-          System.out.println("I am here baby");
 
+          
+          if(url.getText().indexOf("http")>=0){
+        	  
+              messageBoxFav.setMessage("Add to favorite --->" + url.getText());
+              messageBoxFav.setText("Add to Favorite");
+              
+        	  if(messageBoxFav.open() == SWT.OK){
+            	  try {
+            		  String url_content = browser.getText();
+            		  int begin_title_index = url_content.indexOf("<title>");
+            		  int end_title_index = url_content.indexOf("</title>");
+            		  String title_string = null;
+            		  
+            		  if(begin_title_index > 0 && end_title_index > 0){
+            			  title_string = url_content.substring(begin_title_index+7, end_title_index);
+            		  }
+            		  
+            		  System.out.println(title_string);
+            		  writeURLToFile("myFav","favorite.txt",title_string,url.getText());
+            	  }catch(IOException exception){
+            		  exception.printStackTrace();
+            	  }
+        	  }
+        	  
+          }
+          //System.out.println("I am here baby");
+          buttonFav.setSelection(false);
         }
       });
    
@@ -166,4 +200,102 @@ public class myBrowser{
     }
     display.dispose();
   }
+  //METHODS
+
+  //Write to File
+	private static void writeURLToFile(String fdir, String fname, String ftitle, String url) throws IOException{
+		// TODO Auto-generated method stub
+		readURLFromFile("myFav", "favorite.txt");
+		url_list.add(new url_address(ftitle,url));
+		
+		File file_name = new File(fdir + "/" + fname);
+		
+		BufferedWriter bw = null;
+		
+		if(file_name.exists()){
+			bw = new BufferedWriter(new FileWriter(file_name));
+		}
+		
+		for(int i = 0; i < url_list.size(); i++){
+			bw.write(url_list.get(i).getTitle() +  "\t" + url_list.get(i).getUrl());
+			bw.newLine();
+		}
+		
+		if(bw!=null){
+			bw.flush();
+			bw.close();
+		}
+		
+	}
+
+	private static void readURLFromFile(String fdir, String fname) throws IOException {
+		// TODO Auto-generated method stub
+		url_list.clear();
+		
+		File file_dir = new File(fdir);
+		if(!file_dir.exists()){
+			file_dir.mkdir();
+				System.out.println("Create Folder -->" + file_dir.toString());
+		}
+		
+		File file_name = new File(fdir + "/"+ fname);
+		if(!file_name.exists()){
+			file_name.createNewFile();
+				System.out.println("Successful of creating file ---> Name=" + file_name.toString());
+		}
+		
+		BufferedReader br = null;
+		
+		if(file_name.exists()){
+			br = new BufferedReader( new FileReader(file_name));
+		}else{
+			System.out.println("File " + file_name.toString() +" does not exist!");
+			
+		}
+		
+		String s_line = new String();
+		url_list.clear();
+		
+		String[] token;
+		while(br !=null && (s_line = br.readLine()) !=null){
+			token = s_line.split("\t");
+			url_list.add(new url_address(token[0], token[1]));
+		}
+		
+		if(br!=null){
+			try{
+				br.close();
+			} catch (IOException e){
+				e.printStackTrace();
+			}
+		}
+		
+	}
 }//End of KSU Browser
+class url_address{
+	
+	public String getTitle(){
+		return title;
+	}
+	
+	public void setTitle(String title){
+		this.title = title;
+	}
+	
+	public String getUrl(){
+		return url;
+	}
+	
+	public void setUrl(String url){
+		this.url = url;
+	}
+	
+	String title;
+	String url;
+	
+	public url_address(String title, String url){
+		this.title = title;
+		this.url = url;
+	}
+	
+}
